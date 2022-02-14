@@ -1,0 +1,8 @@
+/bulid
+bulid
+/node_modules
+.DS_Store
+/bulid/*
+bulid/*
+*.log
+.idea/

@@ -1,0 +1,38 @@
+body {
+    font-size: 1rem;
+    line-height: 1.2;
+    margin: 0;
+    font-family: 'PT_Root_UI', 'PTSans','Arial', 'Roboto','Helvetica CY','Nimbus Sans L', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    color: #212121;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+   
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+ul,
+ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.clearfix {
+    &:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
