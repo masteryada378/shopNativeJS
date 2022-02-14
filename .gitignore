@@ -2,5 +2,6 @@
 .DS_Store
 /bulid/*
 bulid/*
+/bulid
 *.log
 .idea/
