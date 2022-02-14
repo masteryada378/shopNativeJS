@@ -3,7 +3,11 @@ const browserSync = require('browser-sync');
 const concat = require('gulp-concat');
 const pug = require('gulp-pug');
 const rename = require('gulp-rename');
-const sass  = require('gulp-sass');
+
+// const sass  = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
+
+
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 const spritesmith = require('gulp.spritesmith');
@@ -13,7 +17,7 @@ var svgSprite = require('gulp-svg-sprite');
 const babel = require('gulp-babel');
 
 
-var pipeline = require('readable-stream').pipeline;
+// var pipeline = require('readable-stream').pipeline;
 
 
 // Настройка сервера
