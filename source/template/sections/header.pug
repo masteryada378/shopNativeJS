@@ -1,1 +1,18 @@
-header.header шапка
+header.header.container
+    a(href="#")
+        img(src="/images/logo.png", alt="logo").header__logo
+    nav.header__nav 
+        a(href="#").header__link.active HOME
+        ul.header__link.header__list ALL BRANDS
+        a(href="#").header__link LATEST
+        a(href="#").header__link FEATURED
+        a(href="#").header__link ABOUT
+        a(href="#").header__link BLOG 
+        a(href="#").header__link CONTACT
+        svg.header__search
+            use(xlink:href='images/sprite.svg#search', alt="search")
+    .header-cart
+        svg.header-cart__icon
+            use(xlink:href='images/sprite.svg#cart', alt="search")
+        span.header-cart__text $ 460.00
+        span.header-cart__counter 2
