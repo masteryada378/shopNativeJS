@@ -1,0 +1,17 @@
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    width: calc(25% - 20px);
+    &__img {
+        max-width: 100%;
+    }
+    &:last-child {
+        margin-right: auto;
+        margin-left: 40px
+    }
+}
