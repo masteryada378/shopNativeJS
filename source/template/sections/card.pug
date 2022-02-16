@@ -3,9 +3,10 @@
     span.card__title Cool phone
     span.card__price $1000.00
         span.card__old-price $2000.01
-    button.card__clear
-        svg.header-cart__icon
-            use(xlink:href='images/sprite.svg#cart', alt="search")
-    button.card__cart
-        svg.header-cart__icon
-            use(xlink:href='images/sprite.svg#search', alt="search")
+    .card__btn-box
+        button.card__button
+            svg.card__icon
+                use(xlink:href='images/sprite.svg#dustbin', alt="search")
+        button.card__button
+            svg.card__icon
+                use(xlink:href='images/sprite.svg#basket', alt="search")
