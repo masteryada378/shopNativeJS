@@ -2,7 +2,8 @@
 console.log('Hello friend');
 
 let elements = {
-    phoneBox: document.getElementById('items')
+    phoneBox: document.getElementById('items'),
+    pagination: document.getElementById('pagination')
 }
 let template = ['','','','','','']; // если так не делать будет undefinde
 
@@ -44,26 +45,30 @@ let phones = [
     {"name": "Xiaomi Mi RedmiBook 13\"", "price": "$1340.00", "lowerPrice": "", "photo": "note8.jpg"}
 ]
 
+let phonesListLenght = phones.length / 8;
+console.log(phonesListLenght);
+
+let makePaginator = () => {
+    for (let i = 0; i < phonesListLenght; i++) {
+        elements.pagination.innerHTML += `<button>${i+1}</button>`;
+    }
+    elements.pagination.children[0].classList.add('active');
+}
+
+makePaginator()
+
 let renderItems = (arrayPhone) => {
-
     let newIndex = -1;
-
     for (let i = 0; i < arrayPhone.length; i++) {
-
         if((i % 8) == 0) {
             newIndex += 1; 
         }
-
         createItem(arrayPhone[i], newIndex);
     }
-
-    console.table(template);
-    elements.phoneBox.innerHTML = template[3];
+    elements.phoneBox.innerHTML = template[0];
 }
 
-let createItem = (dataItem, index) => {
-
-    
+let createItem = (dataItem, index) => {    
     template[index] += `<div class="card"> 
                             <div class="card__img">
                                 <img src="/images/phones/${dataItem.photo}" alt="phone">
@@ -93,3 +98,15 @@ let createItem = (dataItem, index) => {
 }
 
 renderItems(phones);
+
+let paginatorHandler = (event) => {
+    
+    for(let i = 0; i < elements.pagination.childElementCount; i++) {
+        elements.pagination.children[i].classList.remove('active');
+    }
+    event.target.classList.add('active');
+    let newIndex = (event.target.innerHTML - 1)
+    elements.phoneBox.innerHTML = template[newIndex];
+}
+
+elements.pagination.addEventListener('click',paginatorHandler);
