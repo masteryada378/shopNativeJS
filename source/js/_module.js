@@ -4,7 +4,7 @@ console.log('Hello friend');
 let elements = {
     phoneBox: document.getElementById('items')
 }
-let template = [''];
+let template = ['','','','','','']; // если так не делать будет undefinde
 
 let phones = [
     {"name": "HUAWEI MATE S1", "price": "$280.00", "lowerPrice": "$320.00", "photo": "phone1.png"},
@@ -49,21 +49,21 @@ let renderItems = (arrayPhone) => {
     let newIndex = -1;
 
     for (let i = 0; i < arrayPhone.length; i++) {
-        
+
         if((i % 8) == 0) {
             newIndex += 1; 
         }
 
         createItem(arrayPhone[i], newIndex);
     }
+
     console.table(template);
-    elements.phoneBox.innerHTML = template[0];
+    elements.phoneBox.innerHTML = template[3];
 }
 
 let createItem = (dataItem, index) => {
 
-    console.log(index)
-
+    
     template[index] += `<div class="card"> 
                             <div class="card__img">
                                 <img src="/images/phones/${dataItem.photo}" alt="phone">
