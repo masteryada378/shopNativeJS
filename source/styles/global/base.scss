@@ -36,3 +36,9 @@ ol {
         clear: both;
     }
 }
+a,button {
+    transition: all 0.3s ease;
+}
+svg {
+    transition: fill 0.3s ease;
+}

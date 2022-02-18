@@ -1,13 +1,19 @@
-"use strict"
+"use strict";
 console.log('Hello friend');
-
 let elements = {
     phoneBox: document.getElementById('items'),
     pagination: document.getElementById('pagination'),
-    search: document.getElementById('search__input')
+    search: document.getElementById('search__input'),
+    cartBtn: document.getElementById('header-cart'),
+    cartClose: document.getElementById('cart__close'),
+    cartWrapper: document.getElementById('cart__wrapper'),
+    cartDashboard: document.getElementById('dashboard'),
+    cartContent: document.getElementById('cart__content'),
+    bodyElement: document.body
 }
+let cartElementString = '';
+let cartTemplate = [];
 let template = ['','','','','','']; // если так не делать будет undefinde
-
 let phonesArr = [
     {"name": "HUAWEI MATE S1", "price": "$280.00", "lowerPrice": "$320.00", "photo": "phone1.png"},
     {"name": "SONY XPERIA Z5", "price": "$550.00", "lowerPrice": "", "photo": "phone2.png"},
@@ -45,9 +51,13 @@ let phonesArr = [
     {"name": "Xiaomi Mi RedmiBook 16\"", "price": "$1140.00", "lowerPrice": "", "photo": "note7.jpg"},
     {"name": "Xiaomi Mi RedmiBook 13\"", "price": "$1340.00", "lowerPrice": "", "photo": "note8.jpg"}
 ]
-
+let addIdNumber = (arrayData)=>{
+    for (let i = 0; i <arrayData.length; i++){
+        arrayData[i].idIndex = i;
+    }
+} 
+addIdNumber(phonesArr);
 let newPhones = [];
-
 let renderItems = (arrayPhone) => {
     
     template = ['','','','','','']; // ??????? 2 дня потратил 
@@ -60,11 +70,9 @@ let renderItems = (arrayPhone) => {
         createItem(arrayPhone[i], newIndex);
     }
     elements.phoneBox.innerHTML = template[0];
-}
-
+};
 let createItem = (dataItem, index) => {    
-    console.log('YYS')
-    template[index] += `<div class="card"> 
+    template[index] += `<div class="card" data-id=${dataItem.idIndex}> 
                             <div class="card__img">
                                 <img src="/images/phones/${dataItem.photo}" alt="phone">
                             </div>
@@ -90,7 +98,7 @@ let createItem = (dataItem, index) => {
                                 </button>
                             </div>
                         </div>`;
-}
+};
 let makePaginator = (phonesListLenghtArg) => {
     for (let i = 0; i < phonesListLenghtArg; i++) {
         elements.pagination.innerHTML += `<button>${i+1}</button>`;
@@ -100,15 +108,13 @@ let makePaginator = (phonesListLenghtArg) => {
     } else {
         console.log('errorList');
     }
-}
-
+};
 let initList = (phonesDataArgs) => {
     let phonesListLenght = phonesDataArgs.length / 8;
     makePaginator(phonesListLenght);
 
     renderItems(phonesDataArgs);
-}
-
+};
 let paginatorHandler = (event) => {
     if(event.target.tagName === 'BUTTON'){
         for(let i = 0; i < elements.pagination.childElementCount; i++) {
@@ -118,12 +124,9 @@ let paginatorHandler = (event) => {
         let newIndex = (event.target.innerHTML - 1)
         elements.phoneBox.innerHTML = template[newIndex];
     }
-}
-
+};
 elements.pagination.addEventListener('click',paginatorHandler);
-
 initList(phonesArr);
-
 let searchHandler = (event)=> {
 
     newPhones = [];
@@ -139,6 +142,60 @@ let searchHandler = (event)=> {
     elements.phoneBox.innerHTML = '';
     elements.pagination.innerHTML = '';
     initList(newPhones);
+};
+elements.search.addEventListener('input',searchHandler);
+let cartOpen = ()=> {
+    elements.bodyElement.classList.add('body-fixed');
+    elements.cartWrapper.classList.add('active');
+    elements.cartDashboard.classList.add('active');
+};
+let cartClose = ()=> {
+    elements.bodyElement.classList.remove('body-fixed');
+    elements.cartWrapper.classList.remove('active');
+    elements.cartDashboard.classList.remove('active');
+};
+
+elements.cartBtn.addEventListener('click', cartOpen);
+elements.cartClose.addEventListener('click', cartClose);
+elements.cartDashboard.addEventListener('click', cartClose);
+
+let pushCart = ()=>{
+    cartElementString = '';
+    for (let i = 0; i < cartTemplate.length; i++) {
+        cartElementString += `<div class="cart-item" data-id=${cartTemplate[i].idIndex}> 
+                                <div class="cart-item__img">
+                                    <img src="/images/phones/${cartTemplate[i].photo}" alt="phone">
+                                </div>
+                                <span class="cart-item__title">
+                                    ${cartTemplate[i].name}
+                                </span>
+                                <div class="cart-item__right">
+                                    <span class="cart-item__price">
+                                        ${cartTemplate[i].price}
+                                    </span>
+                                    <button class="cart-item__button">
+                                        <svg class="cart-item__icon">
+                                            <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                             </div>`;
+    }
 }
 
-elements.search.addEventListener('input',searchHandler);
+let cartHandler = (event)=>{
+    let element = event.target.closest('.card__btn-box');
+    let numberId = null;
+    if(!!element) {
+        numberId = element.closest('.card').dataset.id;
+        for (let i = 0; i <phonesArr.length; i++) {
+            if(phonesArr[i].idIndex === +numberId) {
+                cartTemplate.push(phonesArr[i]);
+            }
+        }
+        pushCart();
+        elements.cartContent.innerHTML = cartElementString;
+    }
+}
+
+elements.phoneBox.addEventListener('click', cartHandler);
