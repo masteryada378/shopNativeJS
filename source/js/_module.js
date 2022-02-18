@@ -3,11 +3,12 @@ console.log('Hello friend');
 
 let elements = {
     phoneBox: document.getElementById('items'),
-    pagination: document.getElementById('pagination')
+    pagination: document.getElementById('pagination'),
+    search: document.getElementById('search__input')
 }
 let template = ['','','','','','']; // если так не делать будет undefinde
 
-let phones = [
+let phonesArr = [
     {"name": "HUAWEI MATE S1", "price": "$280.00", "lowerPrice": "$320.00", "photo": "phone1.png"},
     {"name": "SONY XPERIA Z5", "price": "$550.00", "lowerPrice": "", "photo": "phone2.png"},
     {"name": "Xiaomi Mi 4i", "price": "$350.00", "lowerPrice": "", "photo": "phone3.png"},
@@ -45,19 +46,12 @@ let phones = [
     {"name": "Xiaomi Mi RedmiBook 13\"", "price": "$1340.00", "lowerPrice": "", "photo": "note8.jpg"}
 ]
 
-let phonesListLenght = phones.length / 8;
-console.log(phonesListLenght);
-
-let makePaginator = () => {
-    for (let i = 0; i < phonesListLenght; i++) {
-        elements.pagination.innerHTML += `<button>${i+1}</button>`;
-    }
-    elements.pagination.children[0].classList.add('active');
-}
-
-makePaginator()
+let newPhones = [];
 
 let renderItems = (arrayPhone) => {
+    
+    template = ['','','','','','']; // ??????? 2 дня потратил 
+
     let newIndex = -1;
     for (let i = 0; i < arrayPhone.length; i++) {
         if((i % 8) == 0) {
@@ -69,6 +63,7 @@ let renderItems = (arrayPhone) => {
 }
 
 let createItem = (dataItem, index) => {    
+    console.log('YYS')
     template[index] += `<div class="card"> 
                             <div class="card__img">
                                 <img src="/images/phones/${dataItem.photo}" alt="phone">
@@ -96,17 +91,54 @@ let createItem = (dataItem, index) => {
                             </div>
                         </div>`;
 }
+let makePaginator = (phonesListLenghtArg) => {
+    for (let i = 0; i < phonesListLenghtArg; i++) {
+        elements.pagination.innerHTML += `<button>${i+1}</button>`;
+    }
+    if(!!elements.pagination.children[0]){
+        elements.pagination.children[0].classList.add('active');
+    } else {
+        console.log('errorList');
+    }
+}
 
-renderItems(phones);
+let initList = (phonesDataArgs) => {
+    let phonesListLenght = phonesDataArgs.length / 8;
+    makePaginator(phonesListLenght);
+
+    renderItems(phonesDataArgs);
+}
 
 let paginatorHandler = (event) => {
-    
-    for(let i = 0; i < elements.pagination.childElementCount; i++) {
-        elements.pagination.children[i].classList.remove('active');
+    if(event.target.tagName === 'BUTTON'){
+        for(let i = 0; i < elements.pagination.childElementCount; i++) {
+            elements.pagination.children[i].classList.remove('active');
+        }
+        event.target.classList.add('active');
+        let newIndex = (event.target.innerHTML - 1)
+        elements.phoneBox.innerHTML = template[newIndex];
     }
-    event.target.classList.add('active');
-    let newIndex = (event.target.innerHTML - 1)
-    elements.phoneBox.innerHTML = template[newIndex];
 }
 
 elements.pagination.addEventListener('click',paginatorHandler);
+
+initList(phonesArr);
+
+let searchHandler = (event)=> {
+
+    newPhones = [];
+    let searchSimvol = event.target.value.toLowerCase();
+    let dataInputStr = ''; 
+
+    for (let i=0; i < phonesArr.length; i++) {
+        dataInputStr = phonesArr[i].name.toLowerCase();        
+        if(dataInputStr.indexOf(searchSimvol) >= 0) {         
+            newPhones.push(phonesArr[i]);
+        }
+    }
+    elements.phoneBox.innerHTML = '';
+    elements.pagination.innerHTML = '';
+    initList(newPhones);
+}
+
+elements.search.addEventListener('input',searchHandler);
