@@ -79,7 +79,7 @@ let createItem = (dataItem, index) => {
     }
     template[index] += `<div class="card" data-id=${dataItem.idIndex}> 
                             <div class="card__img">
-                                <img src="/images/phones/${dataItem.photo}" alt="phone">
+                                <img src="images/phones/${dataItem.photo}" alt="phone">
                             </div>
                             <span class="card__title">
                                 ${dataItem.name}
@@ -161,7 +161,7 @@ let pushCart = ()=>{
     for (let i = 0; i < cartTemplate.length; i++) {
         cartElementString += `<div class="cart-item" data-id=${cartTemplate[i].idIndex}> 
                                 <div class="cart-item__img">
-                                    <img src="/images/phones/${cartTemplate[i].photo}" alt="phone">
+                                    <img src="images/phones/${cartTemplate[i].photo}" alt="phone">
                                 </div>
                                 <span class="cart-item__title">
                                     ${cartTemplate[i].name}
