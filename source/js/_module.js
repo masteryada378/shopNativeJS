@@ -186,11 +186,25 @@ let pushCart = ()=>{
 let cartHandler = (event)=>{
     let element = event.target.closest('.card__btn-box');
     let numberId = null;
+    let flagInCart = true;
     if(!!element) {
+
+        console.log(element);
+
         numberId = element.closest('.card').dataset.id;
         for (let i = 0; i <phonesArr.length; i++) {
             if(phonesArr[i].idIndex === +numberId) {
-                cartTemplate.push(phonesArr[i]);
+                for (let i = 0; i <cartTemplate.length; i++) {
+                    if(cartTemplate[i].idIndex === +numberId) {
+                        flagInCart = false;
+                    }
+                }
+                if (flagInCart) {
+                    console.log('записали')
+                    cartTemplate.push(phonesArr[i]);
+                } else {
+                    console.log('уже есть в корзине');
+                }
             }
         }
         pushCart();
