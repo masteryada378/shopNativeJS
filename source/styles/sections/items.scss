@@ -75,6 +75,22 @@
         & + & {
             border-left: none;
         }
+        // &--basket {
+        //     &.in-cart {
+        //         background: yellow;
+        //         > .card__icon {
+        //             fill: #fff;
+        //         }
+        //     }
+        // }
+        &--cart {
+            &.in-cart {
+                background: $red;
+                > .card__icon {
+                    fill: #fff;
+                }
+            }
+        }
     }
     &__icon {
         width: 15px;

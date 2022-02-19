@@ -51,12 +51,13 @@ let phonesArr = [
     {"name": "Xiaomi Mi RedmiBook 16\"", "price": "$1140.00", "lowerPrice": "", "photo": "note7.jpg"},
     {"name": "Xiaomi Mi RedmiBook 13\"", "price": "$1340.00", "lowerPrice": "", "photo": "note8.jpg"}
 ]
-let addIdNumber = (arrayData)=>{
+let addIdNumberAndFlag = (arrayData)=>{
     for (let i = 0; i <arrayData.length; i++){
         arrayData[i].idIndex = i;
+        arrayData[i].inCart = false;
     }
 } 
-addIdNumber(phonesArr);
+addIdNumberAndFlag(phonesArr);
 let newPhones = [];
 let renderItems = (arrayPhone) => {
     
@@ -71,7 +72,11 @@ let renderItems = (arrayPhone) => {
     }
     elements.phoneBox.innerHTML = template[0];
 };
-let createItem = (dataItem, index) => {    
+let createItem = (dataItem, index) => {
+    let inCart = '';
+    if(dataItem.inCart){
+        inCart = 'in-cart';
+    }
     template[index] += `<div class="card" data-id=${dataItem.idIndex}> 
                             <div class="card__img">
                                 <img src="/images/phones/${dataItem.photo}" alt="phone">
@@ -86,12 +91,12 @@ let createItem = (dataItem, index) => {
                                 </span>
                             </span>
                             <div class="card__btn-box">
-                                <button class="card__button">
+                                <button class="card__button card__button--basket  ${inCart}">
                                     <svg class="card__icon">
                                         <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
                                     </svg>
                                 </button>
-                                <button class="card__button">
+                                <button class="card__button card__button--cart ${inCart}">
                                     <svg class="card__icon">
                                         <use xlink:href="images/sprite.svg#basket" alt="search"></use>
                                     </svg>
@@ -112,7 +117,6 @@ let makePaginator = (phonesListLenghtArg) => {
 let initList = (phonesDataArgs) => {
     let phonesListLenght = phonesDataArgs.length / 8;
     makePaginator(phonesListLenght);
-
     renderItems(phonesDataArgs);
 };
 let paginatorHandler = (event) => {
@@ -125,7 +129,6 @@ let paginatorHandler = (event) => {
         elements.phoneBox.innerHTML = template[newIndex];
     }
 };
-elements.pagination.addEventListener('click',paginatorHandler);
 initList(phonesArr);
 let searchHandler = (event)=> {
 
@@ -143,7 +146,6 @@ let searchHandler = (event)=> {
     elements.pagination.innerHTML = '';
     initList(newPhones);
 };
-elements.search.addEventListener('input',searchHandler);
 let cartOpen = ()=> {
     elements.bodyElement.classList.add('body-fixed');
     elements.cartWrapper.classList.add('active');
@@ -154,11 +156,6 @@ let cartClose = ()=> {
     elements.cartWrapper.classList.remove('active');
     elements.cartDashboard.classList.remove('active');
 };
-
-elements.cartBtn.addEventListener('click', cartOpen);
-elements.cartClose.addEventListener('click', cartClose);
-elements.cartDashboard.addEventListener('click', cartClose);
-
 let pushCart = ()=>{
     cartElementString = '';
     for (let i = 0; i < cartTemplate.length; i++) {
@@ -182,14 +179,11 @@ let pushCart = ()=>{
                              </div>`;
     }
 }
-
 let cartHandler = (event)=>{
     let element = event.target.closest('.card__btn-box');
     let numberId = null;
     let flagInCart = true;
     if(!!element) {
-
-        console.log(element);
 
         numberId = element.closest('.card').dataset.id;
         for (let i = 0; i <phonesArr.length; i++) {
@@ -200,16 +194,45 @@ let cartHandler = (event)=>{
                     }
                 }
                 if (flagInCart) {
-                    console.log('записали')
+                    phonesArr[i].inCart = true;
                     cartTemplate.push(phonesArr[i]);
-                } else {
-                    console.log('уже есть в корзине');
-                }
+                } 
             }
         }
         pushCart();
         elements.cartContent.innerHTML = cartElementString;
+        elements.phoneBox.innerHTML = '';
+        elements.pagination.innerHTML = '';
+        initList(phonesArr);
     }
 }
+let deleteFromCart = (id)=>{
+    // console.log(phonesArr[id]);
+    // phonesArr[id].inCart = false;
+    // console.log(cartTemplate)
+    // setTimeout(()=>{
+    //     console.log('clean');
+    //     // cartTemplate = cartTemplate.slice(id, 1);
+    //     delete cartTemplate[id];
+    //     console.log(cartTemplate)
+    // },2000);
 
-elements.phoneBox.addEventListener('click', cartHandler);
+}
+let deleteItemFromCartHandler = (event)=>{
+    let idItem = null;
+    let element = event.target.closest('.cart-item__button');
+    if (element){
+        idItem = element.closest('.cart-item').dataset.id;
+        deleteFromCart(idItem);
+    }
+}
+let initEventListener = ()=>{
+    elements.pagination.addEventListener('click',paginatorHandler);
+    elements.search.addEventListener('input',searchHandler);
+    elements.cartBtn.addEventListener('click', cartOpen);
+    elements.cartClose.addEventListener('click', cartClose);
+    elements.cartDashboard.addEventListener('click', cartClose);
+    elements.phoneBox.addEventListener('click', cartHandler);
+    elements.cartContent.addEventListener('click', deleteItemFromCartHandler);
+}
+initEventListener();
