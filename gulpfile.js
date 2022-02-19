@@ -25,10 +25,10 @@ gulp.task('server', ()=>{
     browserSync.init({
         server: {
             port: 9000,
-            baseDir: 'build'
+            baseDir: 'docs'
         }
     });
-    gulp.watch('build/**/*').on('change', browserSync.reload)
+    gulp.watch('docs/**/*').on('change', browserSync.reload)
 })
 
 //коомпеляция PUG
@@ -38,7 +38,7 @@ gulp.task('pug', ()=>{
                 .pipe(
                     pug({pretty: true})
                 )
-                .pipe(gulp.dest('build'))
+                .pipe(gulp.dest('docs'))
 })
 
 gulp.task('pug-blocks', ()=>{
@@ -46,7 +46,7 @@ gulp.task('pug-blocks', ()=>{
                 .pipe(
                     pug({pretty: true})
                 )
-                .pipe(gulp.dest('build/blocks'))
+                .pipe(gulp.dest('docs/blocks'))
 })
 
 //коомпеляция css       вписать сюда!!!
@@ -67,7 +67,7 @@ gulp.task('scss', ()=>{
                     cascade: false
                 }))
                 .pipe(sourcemaps.write('.'))
-                .pipe(gulp.dest('build/css'))
+                .pipe(gulp.dest('docs/css'))
 })
 
 
@@ -83,25 +83,25 @@ gulp.task('svgSprite', ()=> {
                 },
             }
         ))
-        .pipe(gulp.dest('build/images/'));
+        .pipe(gulp.dest('docs/images/'));
 });
 
 //delete 
 
-gulp.task('clean', (cb)=> rimraf('build', cb));
+gulp.task('clean', (cb)=> rimraf('docs', cb));
 
 // копируем шрифты
 
 gulp.task('copy:fonts', ()=>{
     return gulp.src('source/fonts/**/*.*')
-            .pipe(gulp.dest('build/fonts'))
+            .pipe(gulp.dest('docs/fonts'))
 })
 
 //копируем картинки
 
 gulp.task('copy:images', ()=>{
     return gulp.src('source/images/**/*.*')
-            .pipe(gulp.dest('build/images'))
+            .pipe(gulp.dest('docs/images'))
 })
 
 
@@ -114,7 +114,7 @@ gulp.task('js', ()=>{
             }))
             .pipe(concat('script.js'))
             .pipe(sourcemaps.write('.'))
-            .pipe(gulp.dest('build/js'))
+            .pipe(gulp.dest('docs/js'))
 })
 
 gulp.task('copy', gulp.parallel('copy:fonts', 'js', 'copy:images'))
