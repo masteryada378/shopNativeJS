@@ -1,6 +1,5 @@
 "use strict";
 
-console.log('Hello friend');
 var elements = {
   phoneBox: document.getElementById('items'),
   pagination: document.getElementById('pagination'),
@@ -14,8 +13,8 @@ var elements = {
 };
 var cartElementString = '';
 var cartTemplate = [];
-var template = ['', '', '', '', '', '']; // если так не делать будет undefinde
-
+var template = ['', '', '', '', '', ''];
+var newPhones = [];
 var phonesArr = [{
   "name": "HUAWEI MATE S1",
   "price": "$280.00",
@@ -186,18 +185,13 @@ var addIdNumberAndFlag = function addIdNumberAndFlag(arrayData) {
 };
 
 addIdNumberAndFlag(phonesArr);
-var newPhones = [];
 
 var renderItems = function renderItems(arrayPhone) {
-  template = ['', '', '', '', '', '']; // ??????? 2 дня потратил 
-
+  template = ['', '', '', '', '', ''];
   var newIndex = -1;
 
   for (var i = 0; i < arrayPhone.length; i++) {
-    if (i % 8 == 0) {
-      newIndex += 1;
-    }
-
+    if (i % 8 == 0) newIndex += 1;
     createItem(arrayPhone[i], newIndex);
   }
 
@@ -221,8 +215,6 @@ var makePaginator = function makePaginator(phonesListLenghtArg) {
 
   if (!!elements.pagination.children[0]) {
     elements.pagination.children[0].classList.add('active');
-  } else {
-    console.log('errorList');
   }
 };
 
@@ -250,15 +242,13 @@ var searchHandler = function searchHandler(event) {
   newPhones = [];
   var searchSimvol = event.target.value.toLowerCase();
   var dataInputStr = '';
-
-  for (var i = 0; i < phonesArr.length; i++) {
-    dataInputStr = phonesArr[i].name.toLowerCase();
+  phonesArr.forEach(function (item) {
+    dataInputStr = item.name.toLowerCase();
 
     if (dataInputStr.indexOf(searchSimvol) >= 0) {
-      newPhones.push(phonesArr[i]);
+      newPhones.push(item);
     }
-  }
-
+  });
   elements.phoneBox.innerHTML = '';
   elements.pagination.innerHTML = '';
   initList(newPhones);

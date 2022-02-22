@@ -1,6 +1,5 @@
 "use strict";
-console.log('Hello friend');
-let elements = {
+const elements = {
     phoneBox: document.getElementById('items'),
     pagination: document.getElementById('pagination'),
     search: document.getElementById('search__input'),
@@ -13,7 +12,8 @@ let elements = {
 }
 let cartElementString = '';
 let cartTemplate = [];
-let template = ['','','','','','']; // если так не делать будет undefinde
+let template = ['','','','','',''];
+let newPhones = [];
 let phonesArr = [
     {"name": "HUAWEI MATE S1", "price": "$280.00", "lowerPrice": "$320.00", "photo": "phone1.png"},
     {"name": "SONY XPERIA Z5", "price": "$550.00", "lowerPrice": "", "photo": "phone2.png"},
@@ -51,28 +51,26 @@ let phonesArr = [
     {"name": "Xiaomi Mi RedmiBook 16\"", "price": "$1140.00", "lowerPrice": "", "photo": "note7.jpg"},
     {"name": "Xiaomi Mi RedmiBook 13\"", "price": "$1340.00", "lowerPrice": "", "photo": "note8.jpg"}
 ]
-let addIdNumberAndFlag = (arrayData)=>{
+const addIdNumberAndFlag = (arrayData)=>{
     for (let i = 0; i <arrayData.length; i++){
         arrayData[i].idIndex = i;
         arrayData[i].inCart = false;
     }
 } 
 addIdNumberAndFlag(phonesArr);
-let newPhones = [];
-let renderItems = (arrayPhone) => {
+const renderItems = (arrayPhone) => {
     
-    template = ['','','','','','']; // ??????? 2 дня потратил 
+    template = ['','','','','',''];
 
     let newIndex = -1;
     for (let i = 0; i < arrayPhone.length; i++) {
-        if((i % 8) == 0) {
-            newIndex += 1; 
-        }
+        if((i % 8) == 0) newIndex += 1;
+
         createItem(arrayPhone[i], newIndex);
     }
     elements.phoneBox.innerHTML = template[0];
 };
-let createItem = (dataItem, index) => {
+const createItem = (dataItem, index) => {
     let inCart = '';
     if(dataItem.inCart){
         inCart = 'in-cart';
@@ -104,22 +102,20 @@ let createItem = (dataItem, index) => {
                             </div>
                         </div>`;
 };
-let makePaginator = (phonesListLenghtArg) => {
+const makePaginator = (phonesListLenghtArg) => {
     for (let i = 0; i < phonesListLenghtArg; i++) {
         elements.pagination.innerHTML += `<button>${i+1}</button>`;
     }
     if(!!elements.pagination.children[0]){
         elements.pagination.children[0].classList.add('active');
-    } else {
-        console.log('errorList');
     }
 };
-let initList = (phonesDataArgs) => {
+const initList = (phonesDataArgs) => {
     let phonesListLenght = phonesDataArgs.length / 8;
     makePaginator(phonesListLenght);
     renderItems(phonesDataArgs);
 };
-let paginatorHandler = (event) => {
+const paginatorHandler = (event) => {
     if(event.target.tagName === 'BUTTON'){
         for(let i = 0; i < elements.pagination.childElementCount; i++) {
             elements.pagination.children[i].classList.remove('active');
@@ -130,33 +126,33 @@ let paginatorHandler = (event) => {
     }
 };
 initList(phonesArr);
-let searchHandler = (event)=> {
+const searchHandler = (event)=> {
 
     newPhones = [];
     let searchSimvol = event.target.value.toLowerCase();
     let dataInputStr = ''; 
 
-    for (let i=0; i < phonesArr.length; i++) {
-        dataInputStr = phonesArr[i].name.toLowerCase();        
+    phonesArr.forEach(function(item) {
+        dataInputStr = item.name.toLowerCase();        
         if(dataInputStr.indexOf(searchSimvol) >= 0) {         
-            newPhones.push(phonesArr[i]);
+            newPhones.push(item);
         }
-    }
+    });
     elements.phoneBox.innerHTML = '';
     elements.pagination.innerHTML = '';
     initList(newPhones);
 };
-let cartOpen = ()=> {
+const cartOpen = ()=> {
     elements.bodyElement.classList.add('body-fixed');
     elements.cartWrapper.classList.add('active');
     elements.cartDashboard.classList.add('active');
 };
-let cartClose = ()=> {
+const cartClose = ()=> {
     elements.bodyElement.classList.remove('body-fixed');
     elements.cartWrapper.classList.remove('active');
     elements.cartDashboard.classList.remove('active');
 };
-let pushCart = ()=>{
+const pushCart = ()=>{
     cartElementString = '';
     for (let i = 0; i < cartTemplate.length; i++) {
         cartElementString += `<div class="cart-item" data-id=${cartTemplate[i].idIndex}> 
@@ -179,7 +175,7 @@ let pushCart = ()=>{
                              </div>`;
     }
 }
-let cartHandler = (event)=>{
+const cartHandler = (event)=>{
     let element = event.target.closest('.card__btn-box');
     let numberId = null;
     let flagInCart = true;
@@ -206,7 +202,7 @@ let cartHandler = (event)=>{
         initList(phonesArr);
     }
 }
-let deleteFromCart = (id)=>{
+const deleteFromCart = (id)=>{
     // console.log(phonesArr[id]);
     // phonesArr[id].inCart = false;
     // console.log(cartTemplate)
@@ -218,7 +214,7 @@ let deleteFromCart = (id)=>{
     // },2000);
 
 }
-let deleteItemFromCartHandler = (event)=>{
+const deleteItemFromCartHandler = (event)=>{
     let idItem = null;
     let element = event.target.closest('.cart-item__button');
     if (element){
@@ -226,7 +222,7 @@ let deleteItemFromCartHandler = (event)=>{
         deleteFromCart(idItem);
     }
 }
-let initEventListener = ()=>{
+const initEventListener = ()=>{
     elements.pagination.addEventListener('click',paginatorHandler);
     elements.search.addEventListener('input',searchHandler);
     elements.cartBtn.addEventListener('click', cartOpen);
