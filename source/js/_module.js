@@ -70,37 +70,45 @@ const renderItems = (arrayPhone) => {
     }
     elements.phoneBox.innerHTML = template[0];
 };
-const createItem = (dataItem, index) => {
+const makeBlock = (idIndex, photo, name, price, lowerPrice, inCartFlag) => {
     let inCart = '';
-    if(dataItem.inCart){
+    if(inCartFlag){
         inCart = 'in-cart';
     }
-    template[index] += `<div class="card" data-id=${dataItem.idIndex}> 
-                            <div class="card__img">
-                                <img src="images/phones/${dataItem.photo}" alt="phone">
-                            </div>
-                            <span class="card__title">
-                                ${dataItem.name}
-                            </span>
-                            <span class="card__price">
-                                ${dataItem.price}
-                                <span class="card__old-price">
-                                    ${dataItem.lowerPrice}
-                                </span>
-                            </span>
-                            <div class="card__btn-box">
-                                <button class="card__button card__button--basket  ${inCart}">
-                                    <svg class="card__icon">
-                                        <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
-                                    </svg>
-                                </button>
-                                <button class="card__button card__button--cart ${inCart}">
-                                    <svg class="card__icon">
-                                        <use xlink:href="images/sprite.svg#basket" alt="search"></use>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>`;
+    return `<div class="card" data-id=${idIndex}> 
+                <div class="card__img">
+                    <img src="images/phones/${photo}" alt="phone">
+                </div>
+                <span class="card__title">
+                    ${name}
+                </span>
+                <span class="card__price">
+                    ${price}
+                    <span class="card__old-price">
+                        ${lowerPrice}
+                    </span>
+                </span>
+                <div class="card__btn-box">
+                    <button class="card__button card__button--basket  ${inCart}">
+                        <svg class="card__icon">
+                            <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
+                        </svg>
+                    </button>
+                    <button class="card__button card__button--cart ${inCart}">
+                        <svg class="card__icon">
+                            <use xlink:href="images/sprite.svg#basket" alt="search"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>`;
+}
+const createItem = (dataItem, index) => {
+    template[index] += makeBlock(dataItem.idIndex, 
+                                dataItem.photo, 
+                                dataItem.name, 
+                                dataItem.price, 
+                                dataItem.lowerPrice, 
+                                dataItem.inCart);
 };
 const makePaginator = (phonesListLenghtArg) => {
     for (let i = 0; i < phonesListLenghtArg; i++) {
@@ -152,27 +160,33 @@ const cartClose = ()=> {
     elements.cartWrapper.classList.remove('active');
     elements.cartDashboard.classList.remove('active');
 };
+const makeItemInCart = (idIndex, photo, name, price)=> {
+    return `<div class="cart-item" data-id=${idIndex}> 
+                <div class="cart-item__img">
+                    <img src="images/phones/${photo}" alt="phone">
+                </div>
+                <span class="cart-item__title">
+                    ${name}
+                </span>
+                <div class="cart-item__right">
+                    <span class="cart-item__price">
+                        ${price}
+                    </span>
+                    <button class="cart-item__button">
+                        <svg class="cart-item__icon">
+                            <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>`;
+}
 const pushCart = ()=>{
     cartElementString = '';
     for (let i = 0; i < cartTemplate.length; i++) {
-        cartElementString += `<div class="cart-item" data-id=${cartTemplate[i].idIndex}> 
-                                <div class="cart-item__img">
-                                    <img src="images/phones/${cartTemplate[i].photo}" alt="phone">
-                                </div>
-                                <span class="cart-item__title">
-                                    ${cartTemplate[i].name}
-                                </span>
-                                <div class="cart-item__right">
-                                    <span class="cart-item__price">
-                                        ${cartTemplate[i].price}
-                                    </span>
-                                    <button class="cart-item__button">
-                                        <svg class="cart-item__icon">
-                                            <use xlink:href="images/sprite.svg#dustbin" alt="search"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                             </div>`;
+        cartElementString += makeItemInCart(cartTemplate[i].idIndex, 
+                                            cartTemplate[i].photo,
+                                            cartTemplate[i].name,
+                                            cartTemplate[i].price);
     }
 }
 const cartHandler = (event)=>{

@@ -198,14 +198,18 @@ var renderItems = function renderItems(arrayPhone) {
   elements.phoneBox.innerHTML = template[0];
 };
 
-var createItem = function createItem(dataItem, index) {
+var makeBlock = function makeBlock(idIndex, photo, name, price, lowerPrice, inCartFlag) {
   var inCart = '';
 
-  if (dataItem.inCart) {
+  if (inCartFlag) {
     inCart = 'in-cart';
   }
 
-  template[index] += "<div class=\"card\" data-id=".concat(dataItem.idIndex, "> \n                            <div class=\"card__img\">\n                                <img src=\"images/phones/").concat(dataItem.photo, "\" alt=\"phone\">\n                            </div>\n                            <span class=\"card__title\">\n                                ").concat(dataItem.name, "\n                            </span>\n                            <span class=\"card__price\">\n                                ").concat(dataItem.price, "\n                                <span class=\"card__old-price\">\n                                    ").concat(dataItem.lowerPrice, "\n                                </span>\n                            </span>\n                            <div class=\"card__btn-box\">\n                                <button class=\"card__button card__button--basket  ").concat(inCart, "\">\n                                    <svg class=\"card__icon\">\n                                        <use xlink:href=\"images/sprite.svg#dustbin\" alt=\"search\"></use>\n                                    </svg>\n                                </button>\n                                <button class=\"card__button card__button--cart ").concat(inCart, "\">\n                                    <svg class=\"card__icon\">\n                                        <use xlink:href=\"images/sprite.svg#basket\" alt=\"search\"></use>\n                                    </svg>\n                                </button>\n                            </div>\n                        </div>");
+  return "<div class=\"card\" data-id=".concat(idIndex, "> \n                <div class=\"card__img\">\n                    <img src=\"images/phones/").concat(photo, "\" alt=\"phone\">\n                </div>\n                <span class=\"card__title\">\n                    ").concat(name, "\n                </span>\n                <span class=\"card__price\">\n                    ").concat(price, "\n                    <span class=\"card__old-price\">\n                        ").concat(lowerPrice, "\n                    </span>\n                </span>\n                <div class=\"card__btn-box\">\n                    <button class=\"card__button card__button--basket  ").concat(inCart, "\">\n                        <svg class=\"card__icon\">\n                            <use xlink:href=\"images/sprite.svg#dustbin\" alt=\"search\"></use>\n                        </svg>\n                    </button>\n                    <button class=\"card__button card__button--cart ").concat(inCart, "\">\n                        <svg class=\"card__icon\">\n                            <use xlink:href=\"images/sprite.svg#basket\" alt=\"search\"></use>\n                        </svg>\n                    </button>\n                </div>\n            </div>");
+};
+
+var createItem = function createItem(dataItem, index) {
+  template[index] += makeBlock(dataItem.idIndex, dataItem.photo, dataItem.name, dataItem.price, dataItem.lowerPrice, dataItem.inCart);
 };
 
 var makePaginator = function makePaginator(phonesListLenghtArg) {
@@ -266,11 +270,15 @@ var cartClose = function cartClose() {
   elements.cartDashboard.classList.remove('active');
 };
 
+var makeItemInCart = function makeItemInCart(idIndex, photo, name, price) {
+  return "<div class=\"cart-item\" data-id=".concat(idIndex, "> \n                <div class=\"cart-item__img\">\n                    <img src=\"images/phones/").concat(photo, "\" alt=\"phone\">\n                </div>\n                <span class=\"cart-item__title\">\n                    ").concat(name, "\n                </span>\n                <div class=\"cart-item__right\">\n                    <span class=\"cart-item__price\">\n                        ").concat(price, "\n                    </span>\n                    <button class=\"cart-item__button\">\n                        <svg class=\"cart-item__icon\">\n                            <use xlink:href=\"images/sprite.svg#dustbin\" alt=\"search\"></use>\n                        </svg>\n                    </button>\n                </div>\n            </div>");
+};
+
 var pushCart = function pushCart() {
   cartElementString = '';
 
   for (var i = 0; i < cartTemplate.length; i++) {
-    cartElementString += "<div class=\"cart-item\" data-id=".concat(cartTemplate[i].idIndex, "> \n                                <div class=\"cart-item__img\">\n                                    <img src=\"images/phones/").concat(cartTemplate[i].photo, "\" alt=\"phone\">\n                                </div>\n                                <span class=\"cart-item__title\">\n                                    ").concat(cartTemplate[i].name, "\n                                </span>\n                                <div class=\"cart-item__right\">\n                                    <span class=\"cart-item__price\">\n                                        ").concat(cartTemplate[i].price, "\n                                    </span>\n                                    <button class=\"cart-item__button\">\n                                        <svg class=\"cart-item__icon\">\n                                            <use xlink:href=\"images/sprite.svg#dustbin\" alt=\"search\"></use>\n                                        </svg>\n                                    </button>\n                                </div>\n                             </div>");
+    cartElementString += makeItemInCart(cartTemplate[i].idIndex, cartTemplate[i].photo, cartTemplate[i].name, cartTemplate[i].price);
   }
 };
 
