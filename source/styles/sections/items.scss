@@ -1,0 +1,121 @@
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    width: calc(25% - 20px);
+    border: 1px solid $silver;
+    padding: 25px 20px 0;
+    margin-bottom: 30px;
+    height: 350px;
+
+    &__img {
+        display: block;
+        position: relative;
+        height: 180px;
+        margin-bottom: 15px;
+        > img {
+            display: block;
+            margin: auto;
+            max-width: 100%;
+            max-height: 100%;
+
+        }
+    }
+    &__title {
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: $bold;
+        margin-bottom: 10px;
+
+        &:before {
+            content: ' ';
+            position: absolute;
+            display: inline-block;
+            width: 10px;
+            height: 2px;
+            background: $red;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%)
+        }
+    }
+    &__price {
+        display: inline-block;
+        text-align: center;
+        color: $red;
+        margin-bottom: 40px;
+    }
+    &__old-price{
+        display: inline-block;
+        color: $silver;
+        font-size: 12px;
+        padding-left: 5px;
+        text-decoration: line-through;
+    }
+    &__btn-box {
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+    }
+    &__button{
+        background: transparent;
+        border: 1px solid $silver;
+        border-bottom: none;
+        padding-top: 5px;
+        cursor: pointer;
+        &:hover {
+            background: rgb(221, 221, 221);
+        }
+        & + & {
+            border-left: none;
+        }
+        // &--basket {
+        //     &.in-cart {
+        //         background: yellow;
+        //         > .card__icon {
+        //             fill: #fff;
+        //         }
+        //     }
+        // }
+        &--cart {
+            &.in-cart {
+                background: $red;
+                > .card__icon {
+                    fill: #fff;
+                }
+            }
+        }
+    }
+    &__icon {
+        width: 15px;
+        height: 15px;   
+    }
+}
+.pagination {
+    text-align: center;
+    margin-bottom: 100px;
+    margin-top: 50px;
+
+    button {
+        font-size: 16px;
+        background: transparent;
+        border: 2px solid $silver;
+        padding: 5px 10px;
+        margin-left: 5px;
+        cursor: pointer;        
+
+        &.active{
+            border-color: $black;
+            color: $red;
+        }
+        &:hover{
+            background-color: #d9d9d9;
+        }
+    }
+}
