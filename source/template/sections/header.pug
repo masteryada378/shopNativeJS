@@ -14,8 +14,10 @@ header.header.container
     .header-cart#header-cart
         svg.header-cart__icon
             use(xlink:href='images/sprite.svg#cart', alt="search")
-        span.header-cart__text $ 460.00
-        span.header-cart__counter 2
+        span.header-cart__text $&nbsp
+            sapn#cartPrice 0
+            span .00
+        span.header-cart__counter#cartCounter 0
 .header-bar
     .container
         h1.header-bar__title MY WISHLIST

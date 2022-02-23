@@ -8,8 +8,11 @@ const elements = {
     cartWrapper: document.getElementById('cart__wrapper'),
     cartDashboard: document.getElementById('dashboard'),
     cartContent: document.getElementById('cart__content'),
+    cartPrice: document.getElementById('cartPrice'),
+    cartCounter: document.getElementById('cartCounter'),
     bodyElement: document.body
 }
+let cartSum = 0;
 const notesOnPage = 8;
 let currentPage = 1;
 let cartElementString = '';
@@ -191,8 +194,31 @@ const pushCart = ()=>{
                                             cartTemplate[i].price);
     }
 }
+const cartCounterPlus = () => {
+    if(cartTemplate.length){
+        elements.cartCounter.innerHTML = cartTemplate.length;
+    } else {
+        elements.cartCounter.innerHTML = 0;
+    }
+    let tempPriceString = null;
+    cartTemplate.forEach((item)=>{
+        tempPriceString = +item.price.replace(/[^0-9,.]/g, ' ');
+    })
+    cartSum = cartSum + tempPriceString;
+    elements.cartPrice.innerHTML = cartSum;
+    
+}
+const cartCounterMinus = (valueMinus) => {
+    if(cartTemplate.length){
+        elements.cartCounter.innerHTML = cartTemplate.length;
+    } else {
+        elements.cartCounter.innerHTML = 0;
+    }
+    cartSum = cartSum - +valueMinus.replace(/[^0-9,.]/g, ' ');;
+    elements.cartPrice.innerHTML = cartSum;
+    
+}
 const cartHandler = (id) => {
-    console.log(id);
     let flagInCart = true;
     for (let i = 0; i <newPhones.length; i++) {
         if(newPhones[i].idIndex === +id) {
@@ -207,6 +233,7 @@ const cartHandler = (id) => {
             } 
         }
     }
+    cartCounterPlus();
 }
 const cartEventFilter = (event)=>{
     let element = event.target.closest('.card__btn-box');
@@ -217,6 +244,7 @@ const cartEventFilter = (event)=>{
         elements.cartContent.innerHTML = cartElementString;
         initList(newPhones);
     }
+
 }
 const deleteFromCart = (id)=>{
     let delIndex = null;
@@ -230,7 +258,12 @@ const deleteFromCart = (id)=>{
     pushCart();
     elements.cartContent.innerHTML = cartElementString;
     initList(newPhones);
-
+    if(cartTemplate.length){
+        elements.cartCounter.innerHTML = cartTemplate.length;
+    } else {
+        elements.cartCounter.innerHTML = 0;
+    }
+    cartCounterMinus(newPhones[id].price);
 }
 const deleteItemFromCartHandler = (event)=>{
     let idItem = null;

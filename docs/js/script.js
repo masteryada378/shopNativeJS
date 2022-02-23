@@ -9,8 +9,11 @@ var elements = {
   cartWrapper: document.getElementById('cart__wrapper'),
   cartDashboard: document.getElementById('dashboard'),
   cartContent: document.getElementById('cart__content'),
+  cartPrice: document.getElementById('cartPrice'),
+  cartCounter: document.getElementById('cartCounter'),
   bodyElement: document.body
 };
+var cartSum = 0;
 var notesOnPage = 8;
 var currentPage = 1;
 var cartElementString = '';
@@ -291,8 +294,34 @@ var pushCart = function pushCart() {
   }
 };
 
+var cartCounterPlus = function cartCounterPlus() {
+  if (cartTemplate.length) {
+    elements.cartCounter.innerHTML = cartTemplate.length;
+  } else {
+    elements.cartCounter.innerHTML = 0;
+  }
+
+  var tempPriceString = null;
+  cartTemplate.forEach(function (item) {
+    tempPriceString = +item.price.replace(/[^0-9,.]/g, ' ');
+  });
+  cartSum = cartSum + tempPriceString;
+  elements.cartPrice.innerHTML = cartSum;
+};
+
+var cartCounterMinus = function cartCounterMinus(valueMinus) {
+  if (cartTemplate.length) {
+    elements.cartCounter.innerHTML = cartTemplate.length;
+  } else {
+    elements.cartCounter.innerHTML = 0;
+  }
+
+  cartSum = cartSum - +valueMinus.replace(/[^0-9,.]/g, ' ');
+  ;
+  elements.cartPrice.innerHTML = cartSum;
+};
+
 var cartHandler = function cartHandler(id) {
-  console.log(id);
   var flagInCart = true;
 
   for (var i = 0; i < newPhones.length; i++) {
@@ -309,6 +338,8 @@ var cartHandler = function cartHandler(id) {
       }
     }
   }
+
+  cartCounterPlus();
 };
 
 var cartEventFilter = function cartEventFilter(event) {
@@ -335,6 +366,14 @@ var deleteFromCart = function deleteFromCart(id) {
   pushCart();
   elements.cartContent.innerHTML = cartElementString;
   initList(newPhones);
+
+  if (cartTemplate.length) {
+    elements.cartCounter.innerHTML = cartTemplate.length;
+  } else {
+    elements.cartCounter.innerHTML = 0;
+  }
+
+  cartCounterMinus(newPhones[id].price);
 };
 
 var deleteItemFromCartHandler = function deleteItemFromCartHandler(event) {
