@@ -113,11 +113,12 @@ const createItem = (dataItem) => {
                                 dataItem.inCart);
 };
 const makePaginator = (phonesListLenghtArg) => {
+    elements.pagination.innerHTML = '';
     for (let i = 0; i < phonesListLenghtArg; i++) {
         elements.pagination.innerHTML += `<button>${i+1}</button>`;
     }
-    if(!!elements.pagination.children[0]){
-        elements.pagination.children[0].classList.add('active');
+    if(!!elements.pagination.children[currentPage - 1]){
+        elements.pagination.children[currentPage - 1].classList.add('active');
     }
 };
 const initList = (phonesDataArgs) => {
@@ -190,33 +191,33 @@ const pushCart = ()=>{
                                             cartTemplate[i].price);
     }
 }
-const cartHandler = (event)=>{
-    let element = event.target.closest('.card__btn-box');
-    let numberId = null;
+const cartHandler = (id) => {
     let flagInCart = true;
-    if(!!element) {
-
-        numberId = element.closest('.card').dataset.id;
-        for (let i = 0; i <phonesArr.length; i++) {
-            if(phonesArr[i].idIndex === +numberId) {
-                for (let i = 0; i <cartTemplate.length; i++) {
-                    if(cartTemplate[i].idIndex === +numberId) {
-                        flagInCart = false;
-                    }
+    for (let i = 0; i <phonesArr.length; i++) {
+        if(phonesArr[i].idIndex === +id) {
+            for (let i = 0; i <cartTemplate.length; i++) {
+                if(cartTemplate[i].idIndex === +id) {
+                    flagInCart = false;
                 }
-                if (flagInCart) {
-                    phonesArr[i].inCart = true;
-                    cartTemplate.push(phonesArr[i]);
-                } 
             }
+            if (flagInCart) {
+                phonesArr[i].inCart = true;
+                cartTemplate.push(phonesArr[i]);
+            } 
         }
-        pushCart();
-        elements.cartContent.innerHTML = cartElementString;
-        elements.phoneBox.innerHTML = '';
-        elements.pagination.innerHTML = '';
-        initList(phonesArr);
     }
 }
+const cartEventFilter = (event)=>{
+    let element = event.target.closest('.card__btn-box');
+    if(!!element) {
+        let numberId = element.closest('.card').dataset.id;
+        cartHandler(numberId);
+        pushCart();
+        elements.cartContent.innerHTML = cartElementString;
+        initList(newPhones);
+    }
+}
+
 const deleteFromCart = (id)=>{
     // console.log(phonesArr[id]);
     // phonesArr[id].inCart = false;
@@ -243,7 +244,7 @@ const initEventListener = ()=>{
     elements.cartBtn.addEventListener('click', cartOpen);
     elements.cartClose.addEventListener('click', cartClose);
     elements.cartDashboard.addEventListener('click', cartClose);
-    elements.phoneBox.addEventListener('click', cartHandler);
+    elements.phoneBox.addEventListener('click', cartEventFilter);
     elements.cartContent.addEventListener('click', deleteItemFromCartHandler);
 }
 initEventListener();
