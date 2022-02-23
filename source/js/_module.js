@@ -192,17 +192,18 @@ const pushCart = ()=>{
     }
 }
 const cartHandler = (id) => {
+    console.log(id);
     let flagInCart = true;
-    for (let i = 0; i <phonesArr.length; i++) {
-        if(phonesArr[i].idIndex === +id) {
+    for (let i = 0; i <newPhones.length; i++) {
+        if(newPhones[i].idIndex === +id) {
             for (let i = 0; i <cartTemplate.length; i++) {
                 if(cartTemplate[i].idIndex === +id) {
                     flagInCart = false;
                 }
             }
             if (flagInCart) {
-                phonesArr[i].inCart = true;
-                cartTemplate.push(phonesArr[i]);
+                newPhones[i].inCart = true;
+                cartTemplate.push(newPhones[i]);
             } 
         }
     }
@@ -217,17 +218,18 @@ const cartEventFilter = (event)=>{
         initList(newPhones);
     }
 }
-
 const deleteFromCart = (id)=>{
-    // console.log(phonesArr[id]);
-    // phonesArr[id].inCart = false;
-    // console.log(cartTemplate)
-    // setTimeout(()=>{
-    //     console.log('clean');
-    //     // cartTemplate = cartTemplate.slice(id, 1);
-    //     delete cartTemplate[id];
-    //     console.log(cartTemplate)
-    // },2000);
+    let delIndex = null;
+    newPhones[id].inCart = false;
+    cartTemplate.forEach((item, index)=>{
+        if(+item.idIndex === +id){
+            delIndex = index;
+        }
+    })
+    cartTemplate.splice(delIndex, 1);
+    pushCart();
+    elements.cartContent.innerHTML = cartElementString;
+    initList(newPhones);
 
 }
 const deleteItemFromCartHandler = (event)=>{

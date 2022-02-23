@@ -292,10 +292,11 @@ var pushCart = function pushCart() {
 };
 
 var cartHandler = function cartHandler(id) {
+  console.log(id);
   var flagInCart = true;
 
-  for (var i = 0; i < phonesArr.length; i++) {
-    if (phonesArr[i].idIndex === +id) {
+  for (var i = 0; i < newPhones.length; i++) {
+    if (newPhones[i].idIndex === +id) {
       for (var _i = 0; _i < cartTemplate.length; _i++) {
         if (cartTemplate[_i].idIndex === +id) {
           flagInCart = false;
@@ -303,8 +304,8 @@ var cartHandler = function cartHandler(id) {
       }
 
       if (flagInCart) {
-        phonesArr[i].inCart = true;
-        cartTemplate.push(phonesArr[i]);
+        newPhones[i].inCart = true;
+        cartTemplate.push(newPhones[i]);
       }
     }
   }
@@ -322,15 +323,18 @@ var cartEventFilter = function cartEventFilter(event) {
   }
 };
 
-var deleteFromCart = function deleteFromCart(id) {// console.log(phonesArr[id]);
-  // phonesArr[id].inCart = false;
-  // console.log(cartTemplate)
-  // setTimeout(()=>{
-  //     console.log('clean');
-  //     // cartTemplate = cartTemplate.slice(id, 1);
-  //     delete cartTemplate[id];
-  //     console.log(cartTemplate)
-  // },2000);
+var deleteFromCart = function deleteFromCart(id) {
+  var delIndex = null;
+  newPhones[id].inCart = false;
+  cartTemplate.forEach(function (item, index) {
+    if (+item.idIndex === +id) {
+      delIndex = index;
+    }
+  });
+  cartTemplate.splice(delIndex, 1);
+  pushCart();
+  elements.cartContent.innerHTML = cartElementString;
+  initList(newPhones);
 };
 
 var deleteItemFromCartHandler = function deleteItemFromCartHandler(event) {
