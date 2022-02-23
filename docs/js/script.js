@@ -11,9 +11,11 @@ var elements = {
   cartContent: document.getElementById('cart__content'),
   bodyElement: document.body
 };
+var notesOnPage = 8;
+var currentPage = 1;
 var cartElementString = '';
 var cartTemplate = [];
-var template = ['', '', '', '', '', ''];
+var newTemplate = '';
 var newPhones = [];
 var phonesArr = [{
   "name": "HUAWEI MATE S1",
@@ -182,20 +184,23 @@ var addIdNumberAndFlag = function addIdNumberAndFlag(arrayData) {
     arrayData[i].idIndex = i;
     arrayData[i].inCart = false;
   }
+
+  newPhones = phonesArr.slice();
 };
 
 addIdNumberAndFlag(phonesArr);
 
 var renderItems = function renderItems(arrayPhone) {
-  template = ['', '', '', '', '', ''];
-  var newIndex = -1;
+  newTemplate = '';
+  var start = (currentPage - 1) * notesOnPage;
+  var end = start + notesOnPage;
+  var notes = arrayPhone.slice(start, end);
 
-  for (var i = 0; i < arrayPhone.length; i++) {
-    if (i % 8 == 0) newIndex += 1;
-    createItem(arrayPhone[i], newIndex);
+  for (var i = 0; i < notes.length; i++) {
+    createItem(notes[i]);
   }
 
-  elements.phoneBox.innerHTML = template[0];
+  elements.phoneBox.innerHTML = newTemplate;
 };
 
 var makeBlock = function makeBlock(idIndex, photo, name, price, lowerPrice, inCartFlag) {
@@ -208,8 +213,9 @@ var makeBlock = function makeBlock(idIndex, photo, name, price, lowerPrice, inCa
   return "<div class=\"card\" data-id=".concat(idIndex, "> \n                <div class=\"card__img\">\n                    <img src=\"images/phones/").concat(photo, "\" alt=\"phone\">\n                </div>\n                <span class=\"card__title\">\n                    ").concat(name, "\n                </span>\n                <span class=\"card__price\">\n                    ").concat(price, "\n                    <span class=\"card__old-price\">\n                        ").concat(lowerPrice, "\n                    </span>\n                </span>\n                <div class=\"card__btn-box\">\n                    <button class=\"card__button card__button--basket  ").concat(inCart, "\">\n                        <svg class=\"card__icon\">\n                            <use xlink:href=\"images/sprite.svg#dustbin\" alt=\"search\"></use>\n                        </svg>\n                    </button>\n                    <button class=\"card__button card__button--cart ").concat(inCart, "\">\n                        <svg class=\"card__icon\">\n                            <use xlink:href=\"images/sprite.svg#basket\" alt=\"search\"></use>\n                        </svg>\n                    </button>\n                </div>\n            </div>");
 };
 
-var createItem = function createItem(dataItem, index) {
-  template[index] += makeBlock(dataItem.idIndex, dataItem.photo, dataItem.name, dataItem.price, dataItem.lowerPrice, dataItem.inCart);
+var createItem = function createItem(dataItem) {
+  // template[index] += makeBlock(dataItem.idIndex, 
+  newTemplate += makeBlock(dataItem.idIndex, dataItem.photo, dataItem.name, dataItem.price, dataItem.lowerPrice, dataItem.inCart);
 };
 
 var makePaginator = function makePaginator(phonesListLenghtArg) {
@@ -223,7 +229,7 @@ var makePaginator = function makePaginator(phonesListLenghtArg) {
 };
 
 var initList = function initList(phonesDataArgs) {
-  var phonesListLenght = phonesDataArgs.length / 8;
+  var phonesListLenght = phonesDataArgs.length / notesOnPage;
   makePaginator(phonesListLenght);
   renderItems(phonesDataArgs);
 };
@@ -235,14 +241,15 @@ var paginatorHandler = function paginatorHandler(event) {
     }
 
     event.target.classList.add('active');
-    var newIndex = event.target.innerHTML - 1;
-    elements.phoneBox.innerHTML = template[newIndex];
+    currentPage = +event.target.innerHTML;
+    renderItems(newPhones);
   }
 };
 
 initList(phonesArr);
 
 var searchHandler = function searchHandler(event) {
+  currentPage = 1;
   newPhones = [];
   var searchSimvol = event.target.value.toLowerCase();
   var dataInputStr = '';

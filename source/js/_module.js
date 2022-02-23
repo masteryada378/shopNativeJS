@@ -10,9 +10,11 @@ const elements = {
     cartContent: document.getElementById('cart__content'),
     bodyElement: document.body
 }
+const notesOnPage = 8;
+let currentPage = 1;
 let cartElementString = '';
 let cartTemplate = [];
-let template = ['','','','','',''];
+let newTemplate = '';
 let newPhones = [];
 let phonesArr = [
     {"name": "HUAWEI MATE S1", "price": "$280.00", "lowerPrice": "$320.00", "photo": "phone1.png"},
@@ -56,19 +58,18 @@ const addIdNumberAndFlag = (arrayData)=>{
         arrayData[i].idIndex = i;
         arrayData[i].inCart = false;
     }
+    newPhones = phonesArr.slice();
 } 
 addIdNumberAndFlag(phonesArr);
 const renderItems = (arrayPhone) => {
-    
-    template = ['','','','','',''];
-
-    let newIndex = -1;
-    for (let i = 0; i < arrayPhone.length; i++) {
-        if((i % 8) == 0) newIndex += 1;
-
-        createItem(arrayPhone[i], newIndex);
+    newTemplate = '';
+    let start = (currentPage - 1) * notesOnPage;
+    let end = start + notesOnPage;
+    let notes = arrayPhone.slice(start, end);
+    for (let i = 0; i < notes.length; i++) {
+        createItem(notes[i]);
     }
-    elements.phoneBox.innerHTML = template[0];
+    elements.phoneBox.innerHTML = newTemplate;
 };
 const makeBlock = (idIndex, photo, name, price, lowerPrice, inCartFlag) => {
     let inCart = '';
@@ -102,8 +103,9 @@ const makeBlock = (idIndex, photo, name, price, lowerPrice, inCartFlag) => {
                 </div>
             </div>`;
 }
-const createItem = (dataItem, index) => {
-    template[index] += makeBlock(dataItem.idIndex, 
+const createItem = (dataItem) => {
+    // template[index] += makeBlock(dataItem.idIndex, 
+    newTemplate += makeBlock(dataItem.idIndex, 
                                 dataItem.photo, 
                                 dataItem.name, 
                                 dataItem.price, 
@@ -119,7 +121,7 @@ const makePaginator = (phonesListLenghtArg) => {
     }
 };
 const initList = (phonesDataArgs) => {
-    let phonesListLenght = phonesDataArgs.length / 8;
+    let phonesListLenght = phonesDataArgs.length / notesOnPage;
     makePaginator(phonesListLenght);
     renderItems(phonesDataArgs);
 };
@@ -129,17 +131,16 @@ const paginatorHandler = (event) => {
             elements.pagination.children[i].classList.remove('active');
         }
         event.target.classList.add('active');
-        let newIndex = (event.target.innerHTML - 1)
-        elements.phoneBox.innerHTML = template[newIndex];
+        currentPage = +event.target.innerHTML;
+        renderItems(newPhones);
     }
 };
 initList(phonesArr);
 const searchHandler = (event)=> {
-
+    currentPage = 1;
     newPhones = [];
     let searchSimvol = event.target.value.toLowerCase();
     let dataInputStr = ''; 
-
     phonesArr.forEach(function(item) {
         dataInputStr = item.name.toLowerCase();        
         if(dataInputStr.indexOf(searchSimvol) >= 0) {         
